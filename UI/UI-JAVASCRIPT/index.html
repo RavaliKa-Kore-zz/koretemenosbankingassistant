@@ -1,41 +1,39 @@
 <!DOCTYPE>
 <html>
+<title>Avenir Banking Bot</title>
 	<head>
-		<script src="libs/moment.js?v=1.0" type="text/javascript"></script>
+		<script src="libs/jquery.js" type="text/javascript"></script>
+		<script src="libs/jquery.tmpl.min.js" type="text/javascript"></script>
+		<script src="libs/jquery-ui.min.js" type="text/javascript"></script>
+		<link href="libs/jquery-ui.min.css" rel="stylesheet"></link>
 		
-		<script src="../libs/lodash.min.js?v=1.0"></script>
-		<script src='../libs/anonymousassertion.js?v=1.0'></script>
-		<script src="../kore-bot-sdk-client.js?v=1.0"></script>
-		<script src="chatWindow.js?v=1.0" type="text/javascript"></script>
-		<link href="chatWindow.css?v=1.0" rel="stylesheet"></link>
-	</head>
-	<body>
-		<div id="chatContainer">
-		<button class="openChatWindow" id="openChatWindow">Open Chat Window</button>
-		</div>
+		<script src="../libs/lodash.min.js"></script>
+		<script src='../libs/anonymousassertion.js'></script>
+		<script src="../kore-bot-sdk-client.js"></script>
+		<script src="chatWindow.js" type="text/javascript"></script>
+		<link href="chatWindow.css" rel="stylesheet"></link>
 		<script type="text/javascript">
+		$(document).on("ready",function(){
 			function assertion(options, callback) {
 
 				// Client has to fill the claims and call the callback.
-				var xhr = new XMLHttpRequest();
-
-				xhr.open('POST', 'https://bots.kore.com/api/users/sts');
-				xhr.setRequestHeader('Content-Type', 'application/json');
-				xhr.setRequestHeader('Authorization', 'bearer -----------');
-				xhr.onload = function() {
-					if (xhr.status === 200) {
-						var data = JSON.parse(xhr.responseText);
+				$.ajax({
+					url: "https://devbots.kore.net/api/users/sts",
+					type: 'post',
+					headers: {
+						Authorization: "Basic S09SRU1CMToxMjM0NTY="
+					},
+					dataType: 'json',
+					success: function (data) {
 						options.assertion = data.jwt
 						callback(null, options);
-						console.log(data);
 					}
-				};
-				xhr.send();
+				})
 			}
 
 			var botOptions = {};
 			botOptions.logLevel = 'debug';
-			botOptions.koreAPIUrl = "https://bots.kore.com/api/";
+			botOptions.koreAPIUrl = "https://devbots.kore.net/api/";
 			botOptions.assertionFn = assertion;
 			/*
 			 Below config:(To support the anonymous user in test environments only.)
@@ -47,15 +45,62 @@
 			*/
 			botOptions.test = true;
 			botOptions.koreAnonymousFn = koreAnonymousFn;
-			botOptions.clientId   = "5a37bf24-fea0-4e6b-a816-f9602db08149"; // secure client-id
-			botOptions.botInfo = {name:"your bot name","_id":"bot_id"}; // bot name is case sensitive
+			botOptions.clientId   = "cs-b987e712-2372-51d2-b624-2cce6fee2db2"; // secure client-id
+
+			botOptions.botInfo = {name:"Avenir Banking Bot","_id":"st-cd0e471e-10e1-5048-ac41-33d74cc39144"}; // bot name is case sensitive
 			
 			var chatConfig={
-				botOptions:botOptions
+				botOptions:botOptions,
+				allowIframe: true
 			};
-			document.getElementById('openChatWindow').addEventListener('click',function() {
+
+			koreBotChat().show(chatConfig);
+			$('.openChatWindow').click(function(){
 				koreBotChat().show(chatConfig);
 			});
+		});
 		</script>
+		<style>
+		
+		#chatContainer{
+		position: absolute;
+    top: 0;
+    right: 0;
+		
+		}
+		.openChatWindow{
+		    float: right;
+    margin: 19px 70px 0 0;
+    border: 1px solid #00a4ff;
+    background: #fff;
+    border-radius: 4px;
+    padding: 8px;
+    color: #009dab;
+	cursor:pointer;
+		
+		}
+		
+		.openChatWindow:hover{
+		border: 1px solid #009dab;
+		}
+	.fit { /* set relative picture size */
+    max-width: 100%;
+    max-height: 100%;
+  }
+  .center {
+    display: block;
+    margin: auto;
+  }
+		
+		</style>
+	</head>
+	<body style="width: 100%; height: 100%;  margin:0; padding:0;">
+
+	    <img style="width:100%;" src="./libs/images/bankkk.jpg" class="center fit"/>
+		
+
+		<div id="chatContainer" >
+		<button class="openChatWindow">Open Chat Window</button>
+		</div>
 	</body>
 </html>
